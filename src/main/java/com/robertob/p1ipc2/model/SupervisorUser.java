@@ -14,6 +14,14 @@ public class SupervisorUser {
         this.active = active;
     }
 
+    public SupervisorUser(int code, String name, String username, String email, boolean active) {
+        this.code = code;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.active = active;
+    }
+
     private int code;
     private String name;
     private String username;

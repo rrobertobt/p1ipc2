@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter @Setter
 public class Order {
@@ -13,15 +14,14 @@ public class Order {
         this.status = status;
         this.description = description;
         this.store_code = store_code;
-        this.user_code = user_code;
+        this.store_user_code = user_code;
     }
 
-    public Order(LocalDateTime createdDate, String status, String description, int store_code, int user_code) {
-        this.createdDate = createdDate;
+    public Order(String status, String description, int store_code, int user_code) {
         this.status = status;
         this.description = description;
         this.store_code = store_code;
-        this.user_code = user_code;
+        this.store_user_code = user_code;
     }
 
     private int id;
@@ -29,5 +29,5 @@ public class Order {
     private String status;
     private String description;
     private int store_code;
-    private int user_code;
+    private int store_user_code;
 }

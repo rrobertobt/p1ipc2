@@ -11,7 +11,13 @@ public class WarehouseUser {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.active = active;
+    }
+
+    public WarehouseUser(int code, String name, String username, String email) {
+        this.code = code;
+        this.name = name;
+        this.username = username;
+        this.email = email;
     }
 
     private int code;

@@ -19,7 +19,7 @@ public class DbAdminUser {
     }
 
     public void insert(AdminUser adminUser){
-        String query = "INSERT INTO admin_users (code, name, username, password) VALUES ()";
+        String query = "INSERT INTO admin_users (code, name, username, password) VALUES (?,?,?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setInt(1, adminUser.getCode());
             preparedStatement.setString(2, adminUser.getName());

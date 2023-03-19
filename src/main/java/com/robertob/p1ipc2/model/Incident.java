@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 @Getter @Setter
 public class Incident {
     public Incident(int id, LocalDateTime createdDate, String status, int store_code, int user_code) {
@@ -26,4 +28,6 @@ public class Incident {
     private String status;
     private int store_code;
     private int user_code;
+
+    private ArrayList<IncidentDetail> incidentDetails;
 }
