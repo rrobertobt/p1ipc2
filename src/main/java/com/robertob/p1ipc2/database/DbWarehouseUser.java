@@ -1,6 +1,7 @@
 package com.robertob.p1ipc2.database;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.robertob.p1ipc2.model.StoreUser;
 import com.robertob.p1ipc2.model.SupervisorUser;
 import com.robertob.p1ipc2.model.WarehouseUser;
 
@@ -81,8 +82,9 @@ public class DbWarehouseUser {
                     var name = resultSet.getString("name");
                     var username = resultSet.getString("username");
                     var email = resultSet.getString("email");
+                    var active = resultSet.getBoolean("active");
 
-                    warehouseUser = new WarehouseUser(warehouseUserCode,name,username,email);
+                    warehouseUser = new WarehouseUser(warehouseUserCode,name,username,email, active);
                 }
             }
         } catch (SQLException se){
@@ -102,8 +104,9 @@ public class DbWarehouseUser {
                     var name = resultSet.getString("name");
                     var username = resultSet.getString("username");
                     var email = resultSet.getString("email");
+                    var active = resultSet.getBoolean("active");
 
-                    var warehouseUser = new WarehouseUser(warehouseUserCode,name,username,email);
+                    var warehouseUser = new WarehouseUser(warehouseUserCode,name,username,email,active);
                     warehouseUsers.add(warehouseUser);
                 }
             }
@@ -113,5 +116,31 @@ public class DbWarehouseUser {
         }
 
         return warehouseUsers;
+    }
+
+    public Optional<WarehouseUser> findByUserPassword (String username, String password){
+        String query = "SELECT * FROM warehouse_users WHERE username = ? AND password = ?";
+        WarehouseUser warehouseUser = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    var code = resultSet.getInt("code");
+                    var name = resultSet.getString("name");
+                    var warehouseUsername = resultSet.getString("username");
+                    var email = resultSet.getString("email");
+                    var active = resultSet.getBoolean("active");
+
+                    if (active){
+                        warehouseUser = new WarehouseUser(code, name, warehouseUsername, email, active);
+                    }
+                }
+            }
+        } catch (SQLException se){
+            System.out.println(se);
+        }
+        return Optional.ofNullable(warehouseUser);
     }
 }

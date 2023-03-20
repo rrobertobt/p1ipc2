@@ -26,6 +26,6 @@ public class ProductsServlet extends HttpServlet {
         dbProduct = new DbProduct(connection);
 
         request.setAttribute("products", dbProduct.list());
-        request.getRequestDispatcher("products.jsp").forward(request, response);
+        request.getRequestDispatcher("/logins/storeUserLogin.jsp").forward(request, response);
     }
 }

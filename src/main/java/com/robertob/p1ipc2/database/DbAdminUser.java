@@ -2,6 +2,7 @@ package com.robertob.p1ipc2.database;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.robertob.p1ipc2.model.AdminUser;
+import com.robertob.p1ipc2.model.StoreUser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -97,5 +98,26 @@ public class DbAdminUser {
         }
 
         return adminUsers;
+    }
+
+    public Optional<AdminUser> findByUserPassword(String username, String password){
+        String query = "SELECT * FROM admin_users WHERE username = ? AND password = ?";
+        AdminUser adminUser = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    var code = resultSet.getInt("code");
+                    var name = resultSet.getString("name");
+                    var adminUsername = resultSet.getString("username");
+
+                    adminUser = new AdminUser(code, name, adminUsername);
+                }
+            }
+        } catch (SQLException se){
+            System.out.println(se);
+        }
+        return Optional.ofNullable(adminUser);
     }
 }

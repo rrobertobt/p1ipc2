@@ -1,6 +1,7 @@
 package com.robertob.p1ipc2.database;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.robertob.p1ipc2.model.StoreUser;
 import com.robertob.p1ipc2.model.SupervisorUser;
 
 import javax.sound.midi.Soundbank;
@@ -116,5 +117,31 @@ public class DbSupervisorUser {
         }
 
         return supervisorUsers;
+    }
+
+    public Optional<SupervisorUser> findByUserPassword (String username, String password){
+        String query = "SELECT * FROM supervisor_users WHERE username = ? AND password = ?";
+        SupervisorUser supervisorUser = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    var code = resultSet.getInt("code");
+                    var name = resultSet.getString("name");
+                    var supUsername = resultSet.getString("username");
+                    var email = resultSet.getString("email");
+                    var active = resultSet.getBoolean("active");
+
+                    if (active){
+                        supervisorUser = new SupervisorUser(code, name, supUsername, email, active);
+                    }
+                }
+            }
+        } catch (SQLException se){
+            System.out.println(se);
+        }
+        return Optional.ofNullable(supervisorUser);
     }
 }

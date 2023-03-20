@@ -44,9 +44,15 @@ CREATE TABLE stores (
   name VARCHAR(100) NOT NULL,
   address VARCHAR(200) NOT NULL,
   supervised BOOLEAN NOT NULL,
-  warehouse_user_code INT NOT NULL,
-  PRIMARY KEY (code),
-  FOREIGN KEY (warehouse_user_code) REFERENCES warehouse_users (code)
+  PRIMARY KEY (code)
+);
+
+CREATE TABLE store_warehouse_users (
+    warehouse_user_code INT NOT NULL,
+    store_code INT NOT NULL,
+    PRIMARY KEY (warehouse_user_code, store_code),
+    FOREIGN KEY (warehouse_user_code) REFERENCES warehouse_users(code),
+    FOREIGN KEY (store_code) REFERENCES stores(code)
 );
 
 CREATE TABLE store_users (
@@ -73,6 +79,31 @@ CREATE TABLE orders (
   FOREIGN KEY (store_user_code) REFERENCES store_users (code)
 );
 
+CREATE TABLE shipments(
+id INT AUTO_INCREMENT NOT NULL,
+store_code INT NOT NULL,
+warehouse_user_code INT NOT NULL,
+order_id INT NOT NULL,
+departure_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+received_date DATETIME,
+status VARCHAR(100) NOT NULL DEFAULT 'DESPACHADO',
+PRIMARY KEY (id),
+FOREIGN KEY (store_code) REFERENCES stores (code),
+FOREIGN KEY (warehouse_user_code) REFERENCES warehouse_users (code),
+FOREIGN KEY (order_id) REFERENCES orders (id)
+);
+
+CREATE TABLE shipment_details(
+id INT AUTO_INCREMENT NOT NULL,
+shipment_id INT NOT NULL,
+product_code INT NOT NULL,
+quantity INT NOT NULL,
+cost DECIMAL(6,2) NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (shipment_id) REFERENCES shipments (id),
+FOREIGN KEY (product_code) REFERENCES products (code)
+);
+
 CREATE TABLE order_details (
     id INT AUTO_INCREMENT NOT NULL,
     order_id INT NOT NULL,
@@ -87,12 +118,15 @@ CREATE TABLE order_details (
 CREATE TABLE incidents (
   id INT AUTO_INCREMENT NOT NULL,
   created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(100) NOT NULL,
+  status VARCHAR(100) NOT NULL DEFAULT 'ACTIVA',
   store_code INT NOT NULL,
   user_code INT NOT NULL,
+  solution VARCHAR(1000),
+  shipment_id INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (store_code) REFERENCES stores (code),
-  FOREIGN KEY (user_code) REFERENCES store_users (code)
+  FOREIGN KEY (user_code) REFERENCES store_users (code),
+  FOREIGN KEY (shipment_id) REFERENCES shipments (id)
 );
 
 CREATE TABLE incident_details(
@@ -111,9 +145,11 @@ CREATE TABLE returnings (
   status VARCHAR(100) NOT NULL,
   store_code INT NOT NULL,
   user_code INT NOT NULL,
+  shipment_id INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (store_code) REFERENCES stores (code),
-  FOREIGN KEY (user_code) REFERENCES store_users (code)
+  FOREIGN KEY (user_code) REFERENCES store_users (code),
+  FOREIGN KEY (shipment_id) REFERENCES shipments (id)
 );
 
 CREATE TABLE returnings_details(
@@ -121,40 +157,19 @@ CREATE TABLE returnings_details(
   product_code INT NOT NULL,
   quantity INT NOT NULL,
   description VARCHAR(1000),
+  shipment_id INT NOT NULL,
+  cost DECIMAL(6,2) NOT NULL,
   PRIMARY KEY (returning_id),
   FOREIGN KEY (returning_id) REFERENCES returnings(id),
-  FOREIGN KEY (product_code) REFERENCES products(code)
+  FOREIGN KEY (product_code) REFERENCES products(code),
+  FOREIGN KEY (shipment_id) REFERENCES shipments (id)
 );
 
 CREATE TABLE store_products(
   store_code INT NOT NULL,
   product_code INT NOT NULL,
+  stock INT NOT NULL,
   PRIMARY KEY (store_code, product_code),
   FOREIGN KEY (store_code) REFERENCES stores (code),
-  FOREIGN KEY (product_code) REFERENCES products (code)
-);
-
-CREATE TABLE shipments(
-  id INT AUTO_INCREMENT NOT NULL,
-  store_code INT NOT NULL,
-  warehouse_user_code INT NOT NULL,
-  order_id INT NOT NULL,
-  departure_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  received_date DATETIME,
-  status VARCHAR(100) NOT NULL DEFAULT 'Despachado',
-  PRIMARY KEY (id),
-  FOREIGN KEY (store_code) REFERENCES stores (code),
-  FOREIGN KEY (warehouse_user_code) REFERENCES warehouse_users (code),
-  FOREIGN KEY (order_id) REFERENCES orders (id)
-);
-
-CREATE TABLE shipment_details(
-  id INT AUTO_INCREMENT NOT NULL,
-  shipment_id INT NOT NULL,
-  product_code INT NOT NULL,
-  quantity INT NOT NULL,
-  cost DECIMAL(6,2) NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (shipment_id) REFERENCES shipments (id),
   FOREIGN KEY (product_code) REFERENCES products (code)
 );

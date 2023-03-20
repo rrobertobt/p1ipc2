@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DbStoreUser {
     private Connection connection;
@@ -85,5 +86,32 @@ public class DbStoreUser {
             System.out.println(se);
         }
         return storeUsers;
+    }
+
+    public Optional<StoreUser> findByUserPassword (String username, String password){
+        String query = "SELECT * FROM store_users WHERE username = ? AND password = ?";
+        StoreUser storeUser = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    var code = resultSet.getInt("code");
+                    var name = resultSet.getString("name");
+                    var storeUsername = resultSet.getString("username");
+                    var email = resultSet.getString("email");
+                    var active = resultSet.getBoolean("active");
+                    var storeCode = resultSet.getInt("store_code");
+
+                    if (active){
+                        storeUser = new StoreUser(code, name, storeUsername, email, active, storeCode);
+                    }
+                }
+            }
+        } catch (SQLException se){
+            System.out.println(se);
+        }
+        return Optional.ofNullable(storeUser);
     }
 }

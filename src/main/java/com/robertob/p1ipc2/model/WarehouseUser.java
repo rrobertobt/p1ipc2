@@ -13,11 +13,12 @@ public class WarehouseUser {
         this.email = email;
     }
 
-    public WarehouseUser(int code, String name, String username, String email) {
+    public WarehouseUser(int code, String name, String username, String email, boolean active) {
         this.code = code;
         this.name = name;
         this.username = username;
         this.email = email;
+        this.active = active;
     }
 
     private int code;

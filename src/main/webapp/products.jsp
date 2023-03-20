@@ -14,6 +14,7 @@
     <title>Products</title>
 </head>
 <body>
+    <h2>Database has records?: ${dbHasRecords}</h2>
     <h1>Products</h1>
     <table>
         <thead>
