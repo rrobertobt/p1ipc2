@@ -45,7 +45,7 @@ public class SupervisorUserLoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if (validateUser(username, password)){
-            session.setAttribute("currentUser", supervisorUser);
+            session.setAttribute("currentUser", this.supervisorUser);
             response.sendRedirect("supervisorMain.jsp");
         } else {
             request.setAttribute("error", "Credenciales incorrectas o usuario inactivo");

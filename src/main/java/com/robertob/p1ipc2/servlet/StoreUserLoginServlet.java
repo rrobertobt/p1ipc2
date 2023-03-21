@@ -31,7 +31,7 @@ public class StoreUserLoginServlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         Connection dbConnection = (Connection) session.getAttribute("dbConnection");
-        StoreUser storeUser = (StoreUser) session.getAttribute("user");
+        StoreUser storeUser = (StoreUser) session.getAttribute("currentUser");
 
         if (storeUser != null) {
             response.sendRedirect("storeMain.jsp");
@@ -44,7 +44,7 @@ public class StoreUserLoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if (validateUser(username, password)){
-            session.setAttribute("currentUser", storeUser);
+            session.setAttribute("currentUser", this.storeUser);
             response.sendRedirect("storeMain.jsp");
         } else {
             request.setAttribute("error", "Credenciales incorrectas o usuario inactivo");
@@ -56,7 +56,7 @@ public class StoreUserLoginServlet extends HttpServlet {
         var dbUser = dbStoreUser.findByUserPassword(username, password);
         if(dbUser.isEmpty()) return false;
 
-        storeUser = dbUser.get();
+        this.storeUser = dbUser.get();
         return true;
     }
 }

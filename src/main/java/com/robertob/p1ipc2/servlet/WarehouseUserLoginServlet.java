@@ -44,7 +44,7 @@ public class WarehouseUserLoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if (validateUser(username, password)){
-            session.setAttribute("currentUser", warehouseUser);
+            session.setAttribute("currentUser", this.warehouseUser);
             response.sendRedirect("warehouseMain.jsp");
         } else {
             request.setAttribute("error", "Credenciales incorrectas o usuario inactivo");

@@ -45,7 +45,7 @@ public class AdminUserLoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if (validateUser(username, password)){
-            session.setAttribute("currentUser", adminUser);
+            session.setAttribute("currentUser", this.adminUser);
             response.sendRedirect("adminMain.jsp");
         } else {
             request.setAttribute("error", "Credenciales incorrectas o usuario inactivo");

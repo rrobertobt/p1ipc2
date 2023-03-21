@@ -1,3 +1,4 @@
+USE warehouse;
 INSERT INTO products (code, name, cost, price, stock) VALUES
 (1, 'Producto 1', 13.44, 15, 125),
 (2, 'Producto 2', 4.25, 6, 100),

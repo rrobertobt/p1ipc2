@@ -37,8 +37,6 @@ public class DbHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println("At least one table has records: " + hasRecords);
         return hasRecords;
     }
 
